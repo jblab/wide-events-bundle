@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd">
+    <testsuites>
+        <testsuite name="Core"><directory>tests/Core</directory></testsuite>
+        <testsuite name="DependencyInjection"><directory>tests/DependencyInjection</directory></testsuite>
+        <testsuite name="Http"><directory>tests/Http</directory></testsuite>
+        <testsuite name="Monolog"><directory>tests/Monolog</directory></testsuite>
+        <testsuite name="Messenger"><directory>tests/Messenger</directory></testsuite>
+        <testsuite name="OpenTelemetry"><directory>tests/OpenTelemetry</directory></testsuite>
+    </testsuites>
+</phpunit>

@@ -28,15 +28,15 @@ clean:
 
 [doc("Run a composer command in a PHP contaier")]
 [group("shells")]
-composer *args: (_run default_version "composer" args)
+composer *args: (_run-local default_version "composer" args)
 
 [doc("Run a php command in a PHP contaier")]
 [group("shells")]
-php *args: (_run default_version "php" args)
+php *args: (_run-local default_version "php" args)
 
 [doc("Open a shell in a PHP container")]
 [group("shells")]
-shell: (_run default_version "bash")
+shell: (_run-local default_version "bash")
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Tools
@@ -48,23 +48,23 @@ test: (_test "8.2") (_test "8.3") (_test "8.4")
 
 [doc("Run PHPStan on the project")]
 [group("tools")]
-stan: (_run default_version "composer tools:upgrade && composer tools:run:phpstan")
+stan: (_run-local default_version "composer tools:upgrade && composer tools:run:phpstan")
 
 [doc("Run PHP Parallel Lint on the project")]
 [group("tools")]
-lint: (_run default_version "composer tools:upgrade && composer tools:run:php-lint")
+lint: (_run-local default_version "composer tools:upgrade && composer tools:run:php-lint")
 
 [doc("Run PHP CS Fixer (check) on the project")]
 [group("tools")]
-cs: (_run default_version "composer tools:upgrade && composer tools:run:php-cs-fixer")
+cs: (_run-local default_version "composer tools:upgrade && composer tools:run:php-cs-fixer")
 
 [doc("Run PHP CS Fixer (fix) on the project")]
 [group("tools")]
-cs-fix: (_run default_version "composer tools:upgrade && composer tools:run:php-cs-fixer:fix")
+cs-fix: (_run-local default_version "composer tools:upgrade && composer tools:run:php-cs-fixer:fix")
 
 [doc("Run PHPStan, PHP Parallel Lint and PHP CodeSniffer on the project")]
 [group("tools")]
-run: (_run default_version "composer tools:upgrade && composer tools:run")
+run: (_run-local default_version "composer tools:upgrade && composer tools:run")
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Helpers
@@ -77,6 +77,10 @@ _build +version:
 [private]
 _run version command *args: (_build version)
     docker run --rm jblab-wide-events:{{version}} bash -c "{{command}}" {{args}}
+
+[private]
+_run-local version command *args:
+    docker run --rm --volume ".:/app" jblab-wide-events:{{version}} bash -c "{{command}}" {{args}}
 
 [private]
 _test version: && (_build version) (_run version "composer test")
