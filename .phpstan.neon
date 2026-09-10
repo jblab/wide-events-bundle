@@ -3,3 +3,8 @@ parameters:
   paths:
     - src
     - tests
+  ignoreErrors:
+    - identifier: method.notFound
+      path: src/Core/WideEvent.php
+      count: 1
+      rawMessage: 'Call to an undefined method DateTimeInterface::setTimezone().'
