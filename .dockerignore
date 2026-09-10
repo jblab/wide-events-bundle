@@ -1,0 +1,6 @@
+/.git/
+/.github/
+composer.lock
+Dockerfile
+/vendor/
+/tmp/
