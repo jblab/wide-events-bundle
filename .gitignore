@@ -1,0 +1,8 @@
+/tmp/
+/.idea/
+/.phpunit.result.cache
+/.php-cs-fixer.cache
+**/vendor/
+**/.phpunit.result.cache
+**/.php-cs-fixer.cache
+composer.lock
