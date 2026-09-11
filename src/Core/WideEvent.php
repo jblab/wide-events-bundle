@@ -74,7 +74,7 @@ final class WideEvent
             'message'        => $message,
             'outcome'        => $outcome,
             'error'          => $error,
-            'context'        => $context->all(),
+            'context'        => $context->finalize(),
             'meta'           => $meta,
         ]);
     }

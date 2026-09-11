@@ -25,6 +25,7 @@
     "preferred-install": "dist"
   },
   "scripts": {
+    "test": "php vendor/bin/phpunit",
     "tools:upgrade": [
       "@tools:upgrade:php-lint",
       "@tools:upgrade:php-cs-fixer",
