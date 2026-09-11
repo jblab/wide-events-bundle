@@ -16,6 +16,7 @@ namespace Jblab\WideEvents\Tests\Core;
 
 use Jblab\WideEvents\Core\WideEvent;
 use Jblab\WideEvents\Core\WideEventContext;
+use Jblab\WideEvents\Core\WideEventLimits;
 use PHPUnit\Framework\TestCase;
 
 final class WideEventTest extends TestCase
@@ -64,5 +65,17 @@ final class WideEventTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         WideEvent::fromContext(new WideEventContext(), '');
+    }
+
+    public function testLimitsAreAppliedToTheFinalEvent(): void
+    {
+        $event = WideEvent::fromContext(
+            context: new WideEventContext(['description' => 'abcdef']),
+            event: 'test',
+            limits: new WideEventLimits(maxStringBytes: 3),
+        );
+
+        self::assertSame('abc', $event->toArray()['context']['description']);
+        self::assertTrue($event->toArray()['meta']['truncated']);
     }
 }

@@ -57,6 +57,7 @@ final class WideEvent
         array $outcome = [],
         array $error = [],
         array $meta = [],
+        ?WideEventLimits $limits = null,
     ): self {
         if ('' === $event) {
             throw new \InvalidArgumentException('A wide event name cannot be empty.');
@@ -65,7 +66,7 @@ final class WideEvent
         $timestamp ??= new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $timestamp = $timestamp->setTimezone(new \DateTimeZone('UTC'));
 
-        return new self([
+        $payload = [
             'schema_version' => self::SCHEMA_VERSION,
             'event'          => $event,
             'timestamp'      => $timestamp->format('Y-m-d\\TH:i:s.v\\Z'),
@@ -76,7 +77,9 @@ final class WideEvent
             'error'          => $error,
             'context'        => $context->finalize(),
             'meta'           => $meta,
-        ]);
+        ];
+
+        return new self((new WideEventNormalizer())->normalize($payload, $limits));
     }
 
     /**
