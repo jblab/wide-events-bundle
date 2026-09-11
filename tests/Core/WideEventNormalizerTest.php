@@ -16,6 +16,7 @@ namespace Jblab\WideEvents\Tests\Core;
 
 use Jblab\WideEvents\Core\WideEventLimits;
 use Jblab\WideEvents\Core\WideEventNormalizer;
+use Jblab\WideEvents\Core\WideEventRedactor;
 use PHPUnit\Framework\TestCase;
 
 final class WideEventNormalizerTest extends TestCase
@@ -72,6 +73,40 @@ final class WideEventNormalizerTest extends TestCase
         self::assertSame(['context' => ['first' => 'one'], 'meta' => ['dropped_fields' => 1]], $normalized);
         self::assertLessThanOrEqual(100, \strlen(json_encode($normalized, \JSON_THROW_ON_ERROR)));
     }
+
+    public function testSensitiveKeysAreRedactedRecursivelyBeforeNormalization(): void
+    {
+        $normalized = (new WideEventNormalizer())->normalize(
+            ['context' => ['password' => 'secret', 'nested' => [['token' => 'value', 'safe' => true]]]],
+            redactor: new WideEventRedactor(),
+        );
+
+        self::assertSame([
+            'context' => [
+                'password' => WideEventRedactor::REDACTED,
+                'nested'   => [['token' => WideEventRedactor::REDACTED, 'safe' => true]],
+            ],
+        ], $normalized);
+    }
+
+    public function testCustomKeysAndStrictAllowListAreSupported(): void
+    {
+        $normalized = (new WideEventNormalizer())->normalize(
+            ['context' => ['customer_id' => 'customer-1', 'internal' => true, 'profile' => ['name' => 'Ada']]],
+            redactor: new WideEventRedactor(
+                redactKeys: ['customer_id'],
+                allowedKeys: ['context', 'customer_id', 'profile', 'name'],
+                strictAllowList: true,
+            ),
+        );
+
+        self::assertSame([
+            'context' => [
+                'customer_id' => WideEventRedactor::REDACTED,
+                'profile'     => ['name' => 'Ada'],
+            ],
+        ], $normalized);
+    }
 }
 
 enum TestStatus: string
@@ -79,9 +114,9 @@ enum TestStatus: string
     case Ready = 'ready';
 }
 
-final class TestStringable implements \Stringable
+final readonly class TestStringable implements \Stringable
 {
-    public function __construct(private readonly string $value)
+    public function __construct(private string $value)
     {
     }
 

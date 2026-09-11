@@ -58,6 +58,7 @@ final class WideEvent
         array $error = [],
         array $meta = [],
         ?WideEventLimits $limits = null,
+        ?WideEventRedactor $redactor = null,
     ): self {
         if ('' === $event) {
             throw new \InvalidArgumentException('A wide event name cannot be empty.');
@@ -79,7 +80,7 @@ final class WideEvent
             'meta'           => $meta,
         ];
 
-        return new self((new WideEventNormalizer())->normalize($payload, $limits));
+        return new self((new WideEventNormalizer())->normalize($payload, $limits, $redactor));
     }
 
     /**

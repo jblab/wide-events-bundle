@@ -33,13 +33,17 @@ final class WideEventNormalizer
      *
      * @return array<string, mixed>
      */
-    public function normalize(array $payload, ?WideEventLimits $limits = null): array
-    {
+    public function normalize(
+        array $payload,
+        ?WideEventLimits $limits = null,
+        ?WideEventRedactor $redactor = null,
+    ): array {
         $limits ??= new WideEventLimits();
         $this->fieldCount    = 0;
         $this->droppedFields = 0;
         $this->truncated     = false;
 
+        $payload    = $redactor?->redact($payload) ?? $payload;
         $normalized = $this->normalizeArray($payload, 0, $limits);
         $normalized = $this->fitEvent($normalized, $limits);
 

@@ -17,6 +17,7 @@ namespace Jblab\WideEvents\Tests\Core;
 use Jblab\WideEvents\Core\WideEvent;
 use Jblab\WideEvents\Core\WideEventContext;
 use Jblab\WideEvents\Core\WideEventLimits;
+use Jblab\WideEvents\Core\WideEventRedactor;
 use PHPUnit\Framework\TestCase;
 
 final class WideEventTest extends TestCase
@@ -77,5 +78,16 @@ final class WideEventTest extends TestCase
 
         self::assertSame('abc', $event->toArray()['context']['description']);
         self::assertTrue($event->toArray()['meta']['truncated']);
+    }
+
+    public function testRedactionIsAppliedToTheFinalEvent(): void
+    {
+        $event = WideEvent::fromContext(
+            context: new WideEventContext(['password' => 'secret']),
+            event: 'test',
+            redactor: new WideEventRedactor(),
+        );
+
+        self::assertSame(WideEventRedactor::REDACTED, $event->toArray()['context']['password']);
     }
 }
