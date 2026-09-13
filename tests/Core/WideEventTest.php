@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents\Tests\Core;
 
+use Jblab\WideEvents\Core\TailSamplingPolicy;
 use Jblab\WideEvents\Core\WideEvent;
 use Jblab\WideEvents\Core\WideEventContext;
 use Jblab\WideEvents\Core\WideEventLimits;
@@ -89,5 +90,24 @@ final class WideEventTest extends TestCase
         );
 
         self::assertSame(WideEventRedactor::REDACTED, $event->toArray()['context']['password']);
+    }
+
+    public function testSamplingPolicyRetainsImportantEventsAndSamplesDeterministically(): void
+    {
+        $event = WideEvent::fromContext(
+            context: new WideEventContext(),
+            event: 'test',
+            request: ['request_id' => 'req-1'],
+            meta: ['retain' => true],
+        );
+
+        $policy = new TailSamplingPolicy(sampleRate: 0.0);
+
+        self::assertTrue($policy->shouldSample($event));
+
+        $routine       = WideEvent::fromContext(new WideEventContext(), 'routine');
+        $routinePolicy = new TailSamplingPolicy(sampleRate: 0.5);
+
+        self::assertSame($routinePolicy->shouldSample($routine), $routinePolicy->shouldSample($routine));
     }
 }
