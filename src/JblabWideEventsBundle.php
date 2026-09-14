@@ -21,6 +21,7 @@ use Jblab\WideEvents\Core\WideEventContext;
 use Jblab\WideEvents\Core\WideEventEmitter;
 use Jblab\WideEvents\Core\WideEventLimits;
 use Jblab\WideEvents\Core\WideEventRedactor;
+use Jblab\WideEvents\EventSubscriber\HttpLifecycleSubscriber;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -36,7 +37,7 @@ final class JblabWideEventsBundle extends AbstractBundle
     }
 
     /**
-     * @param array<mixed> $config
+     * @param array<string, mixed> $config
      */
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
@@ -74,5 +75,11 @@ final class JblabWideEventsBundle extends AbstractBundle
         ])->public();
         $services->alias(EventEmitterInterface::class, WideEventEmitter::class)->public();
         $services->alias(SamplingPolicyInterface::class, TailSamplingPolicy::class);
+        $services->set(HttpLifecycleSubscriber::class)->class(HttpLifecycleSubscriber::class)->args([
+            service(WideEventContext::class),
+            service(EventEmitterInterface::class),
+            service(WideEventLimits::class),
+            $config['service'],
+        ]);
     }
 }

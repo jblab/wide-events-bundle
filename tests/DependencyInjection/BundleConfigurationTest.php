@@ -21,6 +21,7 @@ use Jblab\WideEvents\Core\WideEventEmitter;
 use Jblab\WideEvents\JblabWideEventsBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 final class BundleConfigurationTest extends TestCase
 {
@@ -61,9 +62,14 @@ final class BundleConfigurationTest extends TestCase
         $this->extension()->load([['enabled' => true]], $this->container());
     }
 
-    private function extension(): \Symfony\Component\DependencyInjection\Extension\ExtensionInterface
+    private function extension(): ExtensionInterface
     {
-        return (new JblabWideEventsBundle())->getContainerExtension();
+        $extension = (new JblabWideEventsBundle())->getContainerExtension();
+        if (!$extension instanceof ExtensionInterface) {
+            throw new \LogicException('The wide events bundle must provide a container extension.');
+        }
+
+        return $extension;
     }
 
     private function container(): ContainerBuilder
