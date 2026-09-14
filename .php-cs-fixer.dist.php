@@ -47,6 +47,7 @@ return (new PhpCsFixer\Config())
         PhpCsFixer\Finder::create()
             ->in([
                 __DIR__ . '/src',
+                __DIR__ . '/config',
                 __DIR__ . '/tests',
             ])
             ->append([__FILE__])

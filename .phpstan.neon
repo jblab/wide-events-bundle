@@ -2,9 +2,14 @@ parameters:
   level: 8
   paths:
     - src
+    - config
     - tests
   ignoreErrors:
     - identifier: method.notFound
       path: src/Core/WideEvent.php
       count: 1
       rawMessage: 'Call to an undefined method DateTimeInterface::setTimezone().'
+    - identifier: return.type
+      path: tests/DependencyInjection/BundleConfigurationTest.php
+      count: 1
+      message: '#Method [a-zA-z\\]+::extension\(\) should return [a-zA-z\\]+ExtensionInterface but returns [a-zA-z\\]+ExtensionInterface|null.#'
