@@ -12,7 +12,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Jblab\WideEvents\Core\WideEventLimits;
+use Jblab\WideEvents\Core\Normalization\WideEventLimits;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 
 return static function (DefinitionConfigurator $definition): void {

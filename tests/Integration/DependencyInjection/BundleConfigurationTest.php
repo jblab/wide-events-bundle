@@ -12,12 +12,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Tests\DependencyInjection;
+namespace Jblab\WideEvents\Tests\Integration\DependencyInjection;
 
-use Jblab\WideEvents\Core\EventEmitterInterface;
-use Jblab\WideEvents\Core\InMemoryEventEmitter;
-use Jblab\WideEvents\Core\WideEventContext;
-use Jblab\WideEvents\Core\WideEventEmitter;
+use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
+use Jblab\WideEvents\Core\Emission\InMemoryEventEmitter;
+use Jblab\WideEvents\Core\Emission\WideEventEmitter;
+use Jblab\WideEvents\Core\Event\WideEventContext;
 use Jblab\WideEvents\JblabWideEventsBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

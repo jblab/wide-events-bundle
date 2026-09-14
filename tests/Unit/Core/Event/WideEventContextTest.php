@@ -12,9 +12,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Tests\Core;
+namespace Jblab\WideEvents\Tests\Unit\Core\Event;
 
-use Jblab\WideEvents\Core\WideEventContext;
+use Jblab\WideEvents\Core\Event\WideEventContext;
 use PHPUnit\Framework\TestCase;
 
 final class WideEventContextTest extends TestCase

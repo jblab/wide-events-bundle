@@ -12,7 +12,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Core;
+namespace Jblab\WideEvents\Core\Normalization;
 
 /** Removes sensitive keys before event values are normalized or serialized. */
 final class WideEventRedactor

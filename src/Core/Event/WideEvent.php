@@ -12,7 +12,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Core;
+namespace Jblab\WideEvents\Core\Event;
+
+use Jblab\WideEvents\Core\Normalization\WideEventLimits;
+use Jblab\WideEvents\Core\Normalization\WideEventNormalizer;
+use Jblab\WideEvents\Core\Normalization\WideEventRedactor;
 
 /**
  * Immutable, finalized canonical wide event.

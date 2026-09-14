@@ -12,11 +12,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Tests\Http;
+namespace Jblab\WideEvents\Tests\Integration\Http;
 
-use Jblab\WideEvents\Core\InMemoryEventEmitter;
-use Jblab\WideEvents\Core\WideEventContext;
-use Jblab\WideEvents\Core\WideEventLimits;
+use Jblab\WideEvents\Core\Emission\InMemoryEventEmitter;
+use Jblab\WideEvents\Core\Event\WideEventContext;
+use Jblab\WideEvents\Core\Normalization\WideEventLimits;
 use Jblab\WideEvents\EventSubscriber\HttpLifecycleSubscriber;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;

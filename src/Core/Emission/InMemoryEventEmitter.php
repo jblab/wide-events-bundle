@@ -12,7 +12,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Core;
+namespace Jblab\WideEvents\Core\Emission;
+
+use Jblab\WideEvents\Core\Event\WideEvent;
 
 /** Records emitted events without performing I/O. */
 final class InMemoryEventEmitter implements EventEmitterInterface

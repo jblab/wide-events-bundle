@@ -12,14 +12,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Tests\Core;
+namespace Jblab\WideEvents\Tests\Unit\Core\Emission;
 
-use Jblab\WideEvents\Core\EventEmitterInterface;
-use Jblab\WideEvents\Core\InMemoryEventEmitter;
-use Jblab\WideEvents\Core\TailSamplingPolicy;
-use Jblab\WideEvents\Core\WideEvent;
-use Jblab\WideEvents\Core\WideEventContext;
-use Jblab\WideEvents\Core\WideEventEmitter;
+use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
+use Jblab\WideEvents\Core\Emission\InMemoryEventEmitter;
+use Jblab\WideEvents\Core\Emission\WideEventEmitter;
+use Jblab\WideEvents\Core\Event\WideEvent;
+use Jblab\WideEvents\Core\Event\WideEventContext;
+use Jblab\WideEvents\Core\Sampling\TailSamplingPolicy;
 use PHPUnit\Framework\TestCase;
 
 final class WideEventEmitterTest extends TestCase

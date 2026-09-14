@@ -12,7 +12,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Core;
+namespace Jblab\WideEvents\Core\Emission;
+
+use Jblab\WideEvents\Core\Event\WideEvent;
+use Jblab\WideEvents\Core\Sampling\SamplingPolicyInterface;
 
 /** Applies sampling and prevents emission failures from breaking application flow. */
 final class WideEventEmitter implements EventEmitterInterface

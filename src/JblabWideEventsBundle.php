@@ -14,13 +14,13 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents;
 
-use Jblab\WideEvents\Core\EventEmitterInterface;
-use Jblab\WideEvents\Core\SamplingPolicyInterface;
-use Jblab\WideEvents\Core\TailSamplingPolicy;
-use Jblab\WideEvents\Core\WideEventContext;
-use Jblab\WideEvents\Core\WideEventEmitter;
-use Jblab\WideEvents\Core\WideEventLimits;
-use Jblab\WideEvents\Core\WideEventRedactor;
+use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
+use Jblab\WideEvents\Core\Emission\WideEventEmitter;
+use Jblab\WideEvents\Core\Event\WideEventContext;
+use Jblab\WideEvents\Core\Normalization\WideEventLimits;
+use Jblab\WideEvents\Core\Normalization\WideEventRedactor;
+use Jblab\WideEvents\Core\Sampling\SamplingPolicyInterface;
+use Jblab\WideEvents\Core\Sampling\TailSamplingPolicy;
 use Jblab\WideEvents\EventSubscriber\HttpLifecycleSubscriber;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

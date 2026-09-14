@@ -12,7 +12,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Tests\DependencyInjection;
+namespace Jblab\WideEvents\Tests\Integration\DependencyInjection;
 
 use Jblab\WideEvents\JblabWideEventsBundle;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ final class BundleBootTest extends TestCase
 
         $bundle->build($container);
 
-        $loader    = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+        $loader    = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../../config'));
         $loader->load('services.php');
 
         $container->compile();

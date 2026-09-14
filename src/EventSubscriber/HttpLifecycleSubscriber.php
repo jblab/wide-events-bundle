@@ -14,10 +14,10 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents\EventSubscriber;
 
-use Jblab\WideEvents\Core\EventEmitterInterface;
-use Jblab\WideEvents\Core\WideEvent;
-use Jblab\WideEvents\Core\WideEventContext;
-use Jblab\WideEvents\Core\WideEventLimits;
+use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
+use Jblab\WideEvents\Core\Event\WideEvent;
+use Jblab\WideEvents\Core\Event\WideEventContext;
+use Jblab\WideEvents\Core\Normalization\WideEventLimits;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;

@@ -12,7 +12,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Core;
+namespace Jblab\WideEvents\Core\Sampling;
+
+use Jblab\WideEvents\Core\Event\WideEvent;
 
 /** Retains important events and deterministically samples routine traffic. */
 final class TailSamplingPolicy implements SamplingPolicyInterface

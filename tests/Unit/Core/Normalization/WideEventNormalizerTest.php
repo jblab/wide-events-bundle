@@ -12,11 +12,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Tests\Core;
+namespace Jblab\WideEvents\Tests\Unit\Core\Normalization;
 
-use Jblab\WideEvents\Core\WideEventLimits;
-use Jblab\WideEvents\Core\WideEventNormalizer;
-use Jblab\WideEvents\Core\WideEventRedactor;
+use Jblab\WideEvents\Core\Normalization\WideEventLimits;
+use Jblab\WideEvents\Core\Normalization\WideEventNormalizer;
+use Jblab\WideEvents\Core\Normalization\WideEventRedactor;
 use PHPUnit\Framework\TestCase;
 
 final class WideEventNormalizerTest extends TestCase

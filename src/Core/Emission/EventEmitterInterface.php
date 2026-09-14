@@ -12,10 +12,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Jblab\WideEvents\Core;
+namespace Jblab\WideEvents\Core\Emission;
 
-/** Decides whether a finalized wide event should be emitted. */
-interface SamplingPolicyInterface
+use Jblab\WideEvents\Core\Event\WideEvent;
+
+/** Emits a finalized wide event to an external destination. */
+interface EventEmitterInterface
 {
-    public function shouldSample(WideEvent $event): bool;
+    public function emit(WideEvent $event): void;
 }
