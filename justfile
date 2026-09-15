@@ -44,7 +44,7 @@ shell: (_run-local default_version "bash")
 
 [doc("Run project's test suite on supported PHP versions")]
 [group("tools")]
-test: (_test "8.2") (_test "8.3") (_test "8.4")
+test: (_test "8.2") (_test "8.3") (_test "8.4") (_test "8.5")
 
 [doc("Run PHPStan on the project")]
 [group("tools")]
