@@ -5,6 +5,7 @@
     "license": "Apache-2.0",
     "require": {
         "php": "^8.2",
+        "psr/log": "^3.0",
         "symfony/framework-bundle": "^7.4 || ^8.0"
     },
     "require-dev": {
@@ -23,6 +24,9 @@
     "config": {
         "sort-packages": true,
         "preferred-install": "dist"
+    },
+    "suggest": {
+        "monolog/monolog": "^3.0 to provide the Monolog logger used by the Monolog emitter"
     },
     "scripts": {
         "test": "php vendor/bin/phpunit",
