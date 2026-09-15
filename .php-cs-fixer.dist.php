@@ -37,8 +37,9 @@ return (new PhpCsFixer\Config())
         'strict_comparison'      => true,
         'strict_param'           => true,
         'binary_operator_spaces' => ['operators' => [
-            '='  => 'align_single_space',
-            '=>' => 'align_single_space',
+            '='    => 'align_single_space',
+            '??='  => 'align_single_space',
+            '=>'   => 'align_single_space',
         ]],
     ])
     ->setRiskyAllowed(true)

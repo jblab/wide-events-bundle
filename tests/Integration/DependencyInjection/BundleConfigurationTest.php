@@ -19,6 +19,7 @@ use Jblab\WideEvents\Core\Emission\InMemoryEventEmitter;
 use Jblab\WideEvents\Core\Emission\WideEventEmitter;
 use Jblab\WideEvents\Core\Event\WideEventContext;
 use Jblab\WideEvents\JblabWideEventsBundle;
+use Jblab\WideEvents\Messenger\WideEventMiddleware;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -47,6 +48,7 @@ final class BundleConfigurationTest extends TestCase
             ],
         ], $container);
 
+        self::assertTrue($container->has(WideEventMiddleware::class));
         $container->compile();
 
         self::assertInstanceOf(WideEventContext::class, $container->get(WideEventContext::class));

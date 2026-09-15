@@ -22,6 +22,7 @@ use Jblab\WideEvents\Core\Normalization\WideEventRedactor;
 use Jblab\WideEvents\Core\Sampling\SamplingPolicyInterface;
 use Jblab\WideEvents\Core\Sampling\TailSamplingPolicy;
 use Jblab\WideEvents\EventSubscriber\HttpLifecycleSubscriber;
+use Jblab\WideEvents\Messenger\WideEventMiddleware;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -82,5 +83,10 @@ final class JblabWideEventsBundle extends AbstractBundle
             $config['service'],
             $config['request_id']['propagate_response'],
         ]);
+        $services->set(WideEventMiddleware::class)->class(WideEventMiddleware::class)->args([
+            service(WideEventContext::class),
+            service(EventEmitterInterface::class),
+            service(WideEventLimits::class),
+        ])->tag('messenger.middleware');
     }
 }
