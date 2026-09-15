@@ -36,7 +36,8 @@ final class HttpLifecycleSubscriberTest extends TestCase
         $kernel = $this->createStub(HttpKernelInterface::class);
 
         $subscriber->onRequest(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
-        $subscriber->onResponse(new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response(status: 201)));
+        $response = new Response(status: 201);
+        $subscriber->onResponse(new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response));
 
         self::assertCount(1, $destination->events());
         self::assertSame([
@@ -46,6 +47,22 @@ final class HttpLifecycleSubscriberTest extends TestCase
             'route'      => 'order_show',
         ], $destination->events()[0]->toArray()['request']);
         self::assertSame(201, $destination->events()[0]->toArray()['outcome']['http_status']);
+        self::assertSame('req-42', $response->headers->get('X-Request-Id'));
+    }
+
+    public function testResponseRequestIdPropagationCanBeDisabled(): void
+    {
+        $destination = new InMemoryEventEmitter();
+        $subscriber  = $this->subscriber($destination, false);
+        $request     = Request::create('/orders/42', 'GET', server: ['HTTP_X_REQUEST_ID' => 'req-42']);
+        $kernel      = $this->createStub(HttpKernelInterface::class);
+        $response    = new Response();
+
+        $subscriber->onRequest(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
+        $subscriber->onResponse(new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response));
+
+        self::assertCount(1, $destination->events());
+        self::assertFalse($response->headers->has('X-Request-Id'));
     }
 
     public function testSubrequestsDoNotStartOrCompleteAnEvent(): void
@@ -61,7 +78,7 @@ final class HttpLifecycleSubscriberTest extends TestCase
         self::assertSame([], $destination->events());
     }
 
-    public function testExceptionsAreEmittedAndLaterResponseIsIgnored(): void
+    public function testExceptionIsRecordedAndEmittedWithTheFinalResponseStatus(): void
     {
         $destination = new InMemoryEventEmitter();
         $subscriber  = $this->subscriber($destination);
@@ -69,25 +86,54 @@ final class HttpLifecycleSubscriberTest extends TestCase
         $kernel      = $this->createStub(HttpKernelInterface::class);
 
         $subscriber->onRequest(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
-        $subscriber->onException(new \Symfony\Component\HttpKernel\Event\ExceptionEvent(
-            $kernel,
-            $request,
-            HttpKernelInterface::MAIN_REQUEST,
-            new \RuntimeException('not emitted'),
-        ));
-        $subscriber->onResponse(new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response()));
+        $subscriber->onException(
+            new \Symfony\Component\HttpKernel\Event\ExceptionEvent(
+                $kernel,
+                $request,
+                HttpKernelInterface::MAIN_REQUEST,
+                new \RuntimeException('not emitted'),
+            )
+        );
 
-        self::assertCount(1, $destination->events());
-        self::assertSame(\RuntimeException::class, $destination->events()[0]->toArray()['error']['class']);
+        $response = new Response(status: 404);
+        $subscriber->onResponse(new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response));
+
+        $events = $destination->events();
+        self::assertCount(1, $events);
+        self::assertSame(\RuntimeException::class, $events[0]->toArray()['error']['class']);
+        self::assertSame(404, $events[0]->toArray()['outcome']['http_status']);
     }
 
-    private function subscriber(InMemoryEventEmitter $emitter): HttpLifecycleSubscriber
+    public function testExceptionDoesNotEmitBeforeAResponseExists(): void
     {
+        $destination = new InMemoryEventEmitter();
+        $subscriber  = $this->subscriber($destination);
+        $request     = Request::create('/broken');
+        $kernel      = $this->createStub(HttpKernelInterface::class);
+
+        $subscriber->onRequest(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
+        $subscriber->onException(
+            new \Symfony\Component\HttpKernel\Event\ExceptionEvent(
+                $kernel,
+                $request,
+                HttpKernelInterface::MAIN_REQUEST,
+                new \RuntimeException('not emitted'),
+            )
+        );
+
+        self::assertSame(0, \count($destination->events()));
+    }
+
+    private function subscriber(
+        InMemoryEventEmitter $emitter,
+        bool $propagateResponseRequestId = true,
+    ): HttpLifecycleSubscriber {
         return new HttpLifecycleSubscriber(
             new WideEventContext(),
             $emitter,
             new WideEventLimits(),
             ['name' => 'test-service'],
+            $propagateResponseRequestId,
         );
     }
 }

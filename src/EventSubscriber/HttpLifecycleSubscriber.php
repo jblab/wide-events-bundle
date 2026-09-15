@@ -30,6 +30,9 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
     private bool $completed   = false;
     private ?float $startedAt = null;
 
+    /** @var array<string, mixed>|null */
+    private ?array $pendingError = null;
+
     /** @var array<string, mixed> */
     private array $requestData = [];
 
@@ -39,6 +42,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
         private readonly WideEventLimits $limits,
         /** @var array<string, mixed> */
         private readonly array $serviceMetadata = [],
+        private readonly bool $propagateResponseRequestId = true,
     ) {
     }
 
@@ -58,8 +62,9 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
         }
 
         $this->context->reset();
-        $this->completed = false;
-        $this->startedAt = microtime(true);
+        $this->completed    = false;
+        $this->startedAt    = microtime(true);
+        $this->pendingError = null;
 
         $request   = $event->getRequest();
         $requestId = $this->requestId($request);
@@ -84,7 +89,15 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
 
     public function onResponse(ResponseEvent $event): void
     {
-        if (!$event->isMainRequest() || $this->completed) {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        if ($this->propagateResponseRequestId && isset($this->requestData['request_id'])) {
+            $event->getResponse()->headers->set('X-Request-Id', (string) $this->requestData['request_id']);
+        }
+
+        if ($this->completed) {
             return;
         }
 
@@ -94,6 +107,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
                 'status'      => $status >= 400 ? 'failure' : 'success',
                 'http_status' => $status,
             ],
+            error: $this->pendingError ?? [],
         );
     }
 
@@ -103,13 +117,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->complete(
-            outcome: [
-                'status'      => 'failure',
-                'http_status' => 500,
-            ],
-            error: ['class' => $event->getThrowable()::class],
-        );
+        $this->pendingError = ['class' => $event->getThrowable()::class];
     }
 
     /**
@@ -136,8 +144,9 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
             // Telemetry must never become an application failure.
         } finally {
             $this->context->reset();
-            $this->requestData = [];
-            $this->startedAt   = null;
+            $this->requestData  = [];
+            $this->startedAt    = null;
+            $this->pendingError = null;
         }
     }
 

@@ -80,6 +80,7 @@ final class JblabWideEventsBundle extends AbstractBundle
             service(EventEmitterInterface::class),
             service(WideEventLimits::class),
             $config['service'],
+            $config['request_id']['propagate_response'],
         ]);
     }
 }
