@@ -32,7 +32,7 @@ final class TailSamplingPolicyTest extends TestCase
         $slow   = WideEvent::fromContext(
             context: new WideEventContext(),
             event: 'slow',
-            request: ['duration_ms' => 500],
+            outcome: ['duration_ms' => 500],
         );
 
         self::assertTrue($policy->shouldSample($error));

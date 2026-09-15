@@ -43,9 +43,9 @@ final class TailSamplingPolicy implements SamplingPolicyInterface
             return true;
         }
 
-        $request = \is_array($payload['request'] ?? null) ? $payload['request'] : [];
-        if (\is_int($request['duration_ms'] ?? null) || \is_float($request['duration_ms'] ?? null)) {
-            if ($request['duration_ms'] >= $this->slowEventThresholdMs) {
+        $outcome = \is_array($payload['outcome'] ?? null) ? $payload['outcome'] : [];
+        if (\is_int($outcome['duration_ms'] ?? null) || \is_float($outcome['duration_ms'] ?? null)) {
+            if ($outcome['duration_ms'] >= $this->slowEventThresholdMs) {
                 return true;
             }
         }
