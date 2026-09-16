@@ -23,6 +23,7 @@ use Jblab\WideEvents\Core\Sampling\SamplingPolicyInterface;
 use Jblab\WideEvents\Core\Sampling\TailSamplingPolicy;
 use Jblab\WideEvents\EventSubscriber\HttpLifecycleSubscriber;
 use Jblab\WideEvents\Messenger\WideEventMiddleware;
+use Jblab\WideEvents\OpenTelemetry\OpenTelemetryCorrelationProvider;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -48,6 +49,10 @@ final class JblabWideEventsBundle extends AbstractBundle
 
         if (null === $config['emitter'] || '' === $config['emitter']) {
             throw new \InvalidArgumentException('An emitter service must be configured when jblab_wide_events.enabled is true.');
+        }
+
+        if ($config['opentelemetry']['enabled'] && !class_exists(\OpenTelemetry\API\Trace\Span::class)) {
+            throw new \InvalidArgumentException('OpenTelemetry correlation requires the open-telemetry/api package.');
         }
 
         $configurator->import('../config/services.php');
@@ -76,17 +81,23 @@ final class JblabWideEventsBundle extends AbstractBundle
         ])->public();
         $services->alias(EventEmitterInterface::class, WideEventEmitter::class)->public();
         $services->alias(SamplingPolicyInterface::class, TailSamplingPolicy::class);
+        if ($config['opentelemetry']['enabled']) {
+            $services->set(OpenTelemetryCorrelationProvider::class)->class(OpenTelemetryCorrelationProvider::class);
+        }
+        $openTelemetry = $config['opentelemetry']['enabled'] ? service(OpenTelemetryCorrelationProvider::class) : null;
         $services->set(HttpLifecycleSubscriber::class)->class(HttpLifecycleSubscriber::class)->args([
             service(WideEventContext::class),
             service(EventEmitterInterface::class),
             service(WideEventLimits::class),
             $config['service'],
             $config['request_id']['propagate_response'],
+            $openTelemetry,
         ]);
         $services->set(WideEventMiddleware::class)->class(WideEventMiddleware::class)->args([
             service(WideEventContext::class),
             service(EventEmitterInterface::class),
             service(WideEventLimits::class),
+            $openTelemetry,
         ])->tag('messenger.middleware');
     }
 }

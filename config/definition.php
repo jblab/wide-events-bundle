@@ -62,6 +62,12 @@ return static function (DefinitionConfigurator $definition): void {
                 ->end()
             ->end()
             ->scalarNode('emitter')->defaultNull()->end()
+            ->arrayNode('opentelemetry')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->booleanNode('enabled')->defaultFalse()->end()
+                ->end()
+            ->end()
         ->end()
     ;
     // @formatter:on

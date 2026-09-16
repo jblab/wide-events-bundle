@@ -27,7 +27,8 @@
         "preferred-install": "dist"
     },
     "suggest": {
-        "monolog/monolog": "^3.0 to provide the Monolog logger used by the Monolog emitter"
+        "monolog/monolog": "^3.0 to provide the Monolog logger used by the Monolog emitter",
+        "open-telemetry/api": "^1.0 to provide OpenTelemetry trace correlation"
     },
     "scripts": {
         "test": "php vendor/bin/phpunit",

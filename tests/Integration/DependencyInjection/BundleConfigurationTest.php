@@ -64,6 +64,27 @@ final class BundleConfigurationTest extends TestCase
         $this->extension()->load([['enabled' => true]], $this->container());
     }
 
+    public function testOpenTelemetryConfigurationRequiresTheOptionalPackage(): void
+    {
+        if (class_exists(\OpenTelemetry\API\Trace\Span::class)) {
+            self::markTestSkipped('The optional OpenTelemetry API is installed.');
+        }
+
+        $container = $this->container();
+        $container->register(InMemoryEventEmitter::class, InMemoryEventEmitter::class);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('OpenTelemetry correlation requires');
+
+        $this->extension()->load([
+            [
+                'enabled'       => true,
+                'emitter'       => InMemoryEventEmitter::class,
+                'opentelemetry' => ['enabled' => true],
+            ],
+        ], $container);
+    }
+
     private function extension(): ExtensionInterface
     {
         $extension = (new JblabWideEventsBundle())->getContainerExtension();
