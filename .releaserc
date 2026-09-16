@@ -1,0 +1,63 @@
+branches:
+  - name: main
+tagFormat: ${version}
+plugins:
+  - - '@semantic-release/commit-analyzer'
+    - preset: angular
+      releaseRules:
+        - type: docs
+          scope: README
+          release: patch
+        - type: refactor
+          scope: core-*
+          release: minor
+        - type: refactor
+          release: patch
+        - scope: no-release
+          release: false
+  - - '@semantic-release/release-notes-generator'
+    - preset: angular
+      presetConfig:
+        types:
+          - type: feat
+            section: Features
+            hidden: false
+          - type: fix
+            section: Bug Fixes
+            hidden: false
+          - type: docs
+            section: Documentation
+            hidden: false
+          - type: style
+            section: Styles
+            hidden: false
+          - type: refactor
+            section: Code Refactoring
+            hidden: false
+          - type: perf
+            section: Performance Improvements
+            hidden: false
+          - type: test
+            section: Tests
+            hidden: false
+          - type: build
+            section: Build System
+            hidden: false
+          - type: ci
+            section: Continuous Integration
+            hidden: false
+          - type: chore
+            section: Chores
+            hidden: false
+          - type: revert
+            section: Reverts
+            hidden: false
+  - '@semantic-release/github'
+  - '@semantic-release/changelog'
+  - - '@semantic-release/git'
+    - assets:
+        - CHANGELOG.md
+      message: | 
+        docs(changelog): ${nextRelease.version} [skip ci]
+        
+        ${nextRelease.notes}

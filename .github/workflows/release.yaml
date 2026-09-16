@@ -1,0 +1,19 @@
+name: Release
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+
+jobs:
+  release:
+    name: Release version
+    runs-on: ubuntu-latest
+    environment: main
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: jblab/.github/.github/actions/release@main
+        with:
+          app-client-id: ${{ vars.GHA_BOT_CLIENT_ID }}
+          repository: ${{ github.repository }}
+          app-private-key: ${{ secrets.GHA_BOT_PRIVATE_KEY }}
