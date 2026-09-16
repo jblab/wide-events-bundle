@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents\OpenTelemetry;
 
+use Jblab\WideEvents\Core\Correlation\CorrelationProviderInterface;
+
 /** Reads safe correlation identifiers from the active OpenTelemetry span. */
-final class OpenTelemetryCorrelationProvider
+final class OpenTelemetryCorrelationProvider implements CorrelationProviderInterface
 {
     /**
      * @return array{trace_id?: string, span_id?: string}

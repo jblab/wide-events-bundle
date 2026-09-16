@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents\EventSubscriber;
 
+use Jblab\WideEvents\Core\Correlation\CorrelationProviderInterface;
 use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
 use Jblab\WideEvents\Core\Event\WideEvent;
 use Jblab\WideEvents\Core\Event\WideEventContext;
 use Jblab\WideEvents\Core\Normalization\WideEventLimits;
-use Jblab\WideEvents\OpenTelemetry\OpenTelemetryCorrelationProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -44,7 +44,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
         /** @var array<string, mixed> */
         private readonly array $serviceMetadata = [],
         private readonly bool $propagateResponseRequestId = true,
-        private readonly ?OpenTelemetryCorrelationProvider $openTelemetry = null,
+        private readonly ?CorrelationProviderInterface $correlationProvider = null,
     ) {
     }
 
@@ -87,8 +87,8 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
                 $this->requestData[$key] = $value;
             }
         }
-        if (null !== $this->openTelemetry) {
-            $this->requestData = array_replace($this->requestData, $this->openTelemetry->current());
+        if (null !== $this->correlationProvider) {
+            $this->requestData = array_replace($this->requestData, $this->correlationProvider->current());
         }
     }
 

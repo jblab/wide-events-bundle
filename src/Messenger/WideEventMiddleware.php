@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents\Messenger;
 
+use Jblab\WideEvents\Core\Correlation\CorrelationProviderInterface;
 use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
 use Jblab\WideEvents\Core\Event\WideEvent;
 use Jblab\WideEvents\Core\Event\WideEventContext;
 use Jblab\WideEvents\Core\Normalization\WideEventLimits;
-use Jblab\WideEvents\OpenTelemetry\OpenTelemetryCorrelationProvider;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
@@ -35,7 +35,7 @@ final class WideEventMiddleware implements MiddlewareInterface
         private readonly WideEventContext $context,
         private readonly EventEmitterInterface $emitter,
         private readonly WideEventLimits $limits,
-        private readonly ?OpenTelemetryCorrelationProvider $openTelemetry = null,
+        private readonly ?CorrelationProviderInterface $correlationProvider = null,
     ) {
     }
 
@@ -45,7 +45,7 @@ final class WideEventMiddleware implements MiddlewareInterface
         $previousCorrelation     = $this->activeCorrelation;
         $correlation             = $envelope->last(WideEventCorrelationStamp::class) ?? $this->activeCorrelation;
         $correlation             ??= new WideEventCorrelationStamp(bin2hex(random_bytes(16)));
-        $correlation             = $this->withOpenTelemetryCorrelation($correlation);
+        $correlation             = $this->withCorrelation($correlation);
         $this->activeCorrelation = $correlation;
 
         $envelope  = $envelope->with($correlation);
@@ -107,13 +107,13 @@ final class WideEventMiddleware implements MiddlewareInterface
         return $data;
     }
 
-    private function withOpenTelemetryCorrelation(WideEventCorrelationStamp $correlation): WideEventCorrelationStamp
+    private function withCorrelation(WideEventCorrelationStamp $correlation): WideEventCorrelationStamp
     {
-        if (null === $this->openTelemetry) {
+        if (null === $this->correlationProvider) {
             return $correlation;
         }
 
-        $values = $this->openTelemetry->current();
+        $values = $this->correlationProvider->current();
 
         return new WideEventCorrelationStamp(
             $correlation->requestId(),

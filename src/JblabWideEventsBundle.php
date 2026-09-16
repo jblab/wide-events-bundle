@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents;
 
+use Jblab\WideEvents\Core\Correlation\CorrelationProviderInterface;
 use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
 use Jblab\WideEvents\Core\Emission\WideEventEmitter;
 use Jblab\WideEvents\Core\Event\WideEventContext;
@@ -83,6 +84,7 @@ final class JblabWideEventsBundle extends AbstractBundle
         $services->alias(SamplingPolicyInterface::class, TailSamplingPolicy::class);
         if ($config['opentelemetry']['enabled']) {
             $services->set(OpenTelemetryCorrelationProvider::class)->class(OpenTelemetryCorrelationProvider::class);
+            $services->alias(CorrelationProviderInterface::class, OpenTelemetryCorrelationProvider::class);
         }
         $openTelemetry = $config['opentelemetry']['enabled'] ? service(OpenTelemetryCorrelationProvider::class) : null;
         $services->set(HttpLifecycleSubscriber::class)->class(HttpLifecycleSubscriber::class)->args([
