@@ -94,7 +94,7 @@ final class JblabWideEventsBundle extends AbstractBundle
             $config['service'],
             $config['request_id']['propagate_response'],
             $openTelemetry,
-        ]);
+        ])->tag('kernel.event_subscriber');
         $services->set(WideEventMiddleware::class)->class(WideEventMiddleware::class)->args([
             service(WideEventContext::class),
             service(EventEmitterInterface::class),
