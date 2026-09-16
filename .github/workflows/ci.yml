@@ -23,3 +23,19 @@ jobs:
       - run: composer tools:run:php-lint
       - run: composer tools:run:phpstan
       - run: composer tools:run:php-cs-fixer
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: pcov
+      - uses: ramsey/composer-install@v3
+      - run: composer test -- --coverage-clover=coverage.xml --coverage-text
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
