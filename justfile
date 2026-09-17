@@ -76,11 +76,11 @@ _build +version:
 
 [private]
 _run version command *args: (_build version)
-    docker run --rm jblab-wide-events:{{version}} bash -c "{{command}}" {{args}}
+    docker run --rm jblab-wide-events:{{version}} bash -c "{{command}} {{args}}"
 
 [private]
 _run-local version command *args:
-    docker run --rm --volume ".:/app" jblab-wide-events:{{version}} bash -c "{{command}}" {{args}}
+    docker run --rm --volume ".:/app" jblab-wide-events:{{version}} bash -c "{{command}} {{args}}"
 
 [private]
 _test version: && (_build version) (_run version "composer test")

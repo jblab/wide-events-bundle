@@ -31,19 +31,20 @@ justfile   text eol=lf whitespace=blank-at-eol,-blank-at-eof,-space-before-tab,t
 *.woff2   -text diff
 
 # Define what should be included in the final package
-/.github            export-ignore
-/.tools             export-ignore
-/tests              export-ignore
-/vendor             export-ignore
-.dockerignore       export-ignore
-.gitattributes      export-ignore
-.gitignore          export-ignore
-.neon               export-ignore
-.nvmrc              export-ignore
-CODE_OF_CONDUCT.md  export-ignore
-compose.yaml        export-ignore
-CONTRIBUTING.md     export-ignore
-Dockerfile          export-ignore
-justfile            export-ignore
-package*.json       export-ignore
-phpunit.xml.dist    export-ignore
+/.github              export-ignore
+/.tools               export-ignore
+/config/reference.php export-ignore
+/tests                export-ignore
+/vendor               export-ignore
+.dockerignore         export-ignore
+.editorconfig         export-ignore
+.gitattributes        export-ignore
+.gitignore            export-ignore
+*.neon                export-ignore
+.releaserc            export-ignore
+CODE_OF_CONDUCT.md    export-ignore
+compose.yaml          export-ignore
+CONTRIBUTING.md       export-ignore
+Dockerfile            export-ignore
+justfile              export-ignore
+phpunit.xml.dist      export-ignore
