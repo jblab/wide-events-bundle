@@ -36,11 +36,13 @@ return (new PhpCsFixer\Config())
         'declare_strict_types'   => true,
         'strict_comparison'      => true,
         'strict_param'           => true,
-        'binary_operator_spaces' => ['operators' => [
-            '='    => 'align_single_space',
-            '??='  => 'align_single_space',
-            '=>'   => 'align_single_space',
-        ]],
+        'binary_operator_spaces' => [
+            'operators' => [
+                '='   => 'align_single_space',
+                '??=' => 'align_single_space',
+                '=>'  => 'align_single_space',
+            ],
+        ],
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
@@ -50,6 +52,7 @@ return (new PhpCsFixer\Config())
                 __DIR__ . '/config',
                 __DIR__ . '/tests',
             ])
+            ->notPath('reference.php')
             ->append([__FILE__])
     )
 ;

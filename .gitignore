@@ -2,6 +2,7 @@
 /.idea/
 /.phpunit.result.cache
 /.php-cs-fixer.cache
+/config/reference.php
 **/vendor/
 **/.phpunit.result.cache
 **/.php-cs-fixer.cache
