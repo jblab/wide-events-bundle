@@ -64,7 +64,11 @@ cs-fix: (_run-local default_version "composer tools:upgrade && composer tools:ru
 
 [doc("Run PHPStan, PHP Parallel Lint and PHP CodeSniffer on the project")]
 [group("tools")]
-run: (_run-local default_version "composer tools:upgrade && composer tools:run")
+tools: (_run-local default_version "composer tools:upgrade && composer tools:run")
+
+[doc("Run all development tools on the project")]
+[group("tools")]
+run: tools test
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Helpers
