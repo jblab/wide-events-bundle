@@ -5,6 +5,9 @@ plugins:
   - - '@semantic-release/commit-analyzer'
     - preset: angular
       releaseRules:
+        # TODO remove this one once ready for v1
+        - breaking: true
+          release: minor
         - type: docs
           scope: README
           release: patch
