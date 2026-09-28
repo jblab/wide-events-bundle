@@ -59,46 +59,47 @@ final class JblabWideEventsBundle extends AbstractBundle
         $configurator->import('../config/services.php');
         $configurator->parameters()->set('jblab_wide_events.service_metadata', $config['service']);
         $services = $configurator->services();
-        $services->set(WideEventContext::class)->class(WideEventContext::class)->public();
-        $services->set(WideEventLimits::class)->class(WideEventLimits::class)->args([
+        $services->set('jblab_wide_events.context', WideEventContext::class);
+        $services->alias(WideEventContext::class, 'jblab_wide_events.context');
+        $services->set('jblab_wide_events.limits', WideEventLimits::class)->args([
             $config['limits']['max_event_bytes'],
             $config['limits']['max_fields'],
             $config['limits']['max_depth'],
             $config['limits']['max_string_bytes'],
             $config['limits']['oversized_value_strategy'],
         ]);
-        $services->set(WideEventRedactor::class)->class(WideEventRedactor::class)->args([
+        $services->set('jblab_wide_events.redactor', WideEventRedactor::class)->args([
             $config['redaction']['keys'],
             $config['redaction']['allowed_keys'],
             $config['redaction']['strict_allow_list'],
         ]);
-        $services->set(TailSamplingPolicy::class)->class(TailSamplingPolicy::class)->args([
+        $services->set('jblab_wide_events.sampling_policy', TailSamplingPolicy::class)->args([
             $config['sampling']['sample_rate'],
             $config['sampling']['slow_event_threshold_ms'],
         ]);
-        $services->set(WideEventEmitter::class)->class(WideEventEmitter::class)->args([
+        $services->set('jblab_wide_events.emitter', WideEventEmitter::class)->args([
             service($config['emitter']),
-            service(TailSamplingPolicy::class),
-        ])->public();
-        $services->alias(EventEmitterInterface::class, WideEventEmitter::class)->public();
-        $services->alias(SamplingPolicyInterface::class, TailSamplingPolicy::class);
+            service('jblab_wide_events.sampling_policy'),
+        ]);
+        $services->alias(EventEmitterInterface::class, 'jblab_wide_events.emitter');
+        $services->alias(SamplingPolicyInterface::class, 'jblab_wide_events.sampling_policy');
         if ($config['opentelemetry']['enabled']) {
-            $services->set(OpenTelemetryCorrelationProvider::class)->class(OpenTelemetryCorrelationProvider::class);
-            $services->alias(CorrelationProviderInterface::class, OpenTelemetryCorrelationProvider::class);
+            $services->set('jblab_wide_events.opentelemetry_correlation_provider', OpenTelemetryCorrelationProvider::class);
+            $services->alias(CorrelationProviderInterface::class, 'jblab_wide_events.opentelemetry_correlation_provider');
         }
-        $openTelemetry = $config['opentelemetry']['enabled'] ? service(OpenTelemetryCorrelationProvider::class) : null;
-        $services->set(HttpLifecycleSubscriber::class)->class(HttpLifecycleSubscriber::class)->args([
-            service(WideEventContext::class),
-            service(EventEmitterInterface::class),
-            service(WideEventLimits::class),
+        $openTelemetry = $config['opentelemetry']['enabled'] ? service('jblab_wide_events.opentelemetry_correlation_provider') : null;
+        $services->set('jblab_wide_events.http_lifecycle_subscriber', HttpLifecycleSubscriber::class)->args([
+            service('jblab_wide_events.context'),
+            service('jblab_wide_events.emitter'),
+            service('jblab_wide_events.limits'),
             $config['service'],
             $config['request_id']['propagate_response'],
             $openTelemetry,
         ])->tag('kernel.event_subscriber');
-        $services->set(WideEventMiddleware::class)->class(WideEventMiddleware::class)->args([
-            service(WideEventContext::class),
-            service(EventEmitterInterface::class),
-            service(WideEventLimits::class),
+        $services->set('jblab_wide_events.messenger_middleware', WideEventMiddleware::class)->args([
+            service('jblab_wide_events.context'),
+            service('jblab_wide_events.emitter'),
+            service('jblab_wide_events.limits'),
             $openTelemetry,
         ])->tag('messenger.middleware');
     }

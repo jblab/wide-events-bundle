@@ -16,10 +16,8 @@ namespace Jblab\WideEvents\Tests\Integration\DependencyInjection;
 
 use Jblab\WideEvents\Core\Emission\EventEmitterInterface;
 use Jblab\WideEvents\Core\Emission\InMemoryEventEmitter;
-use Jblab\WideEvents\Core\Emission\WideEventEmitter;
 use Jblab\WideEvents\Core\Event\WideEventContext;
 use Jblab\WideEvents\JblabWideEventsBundle;
-use Jblab\WideEvents\Messenger\WideEventMiddleware;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -48,11 +46,14 @@ final class BundleConfigurationTest extends TestCase
             ],
         ], $container);
 
-        self::assertTrue($container->has(WideEventMiddleware::class));
+        self::assertTrue($container->hasDefinition('jblab_wide_events.messenger_middleware'));
+        self::assertSame('jblab_wide_events.context', (string) $container->getAlias(WideEventContext::class));
+        self::assertFalse($container->getAlias(WideEventContext::class)->isPublic());
+        self::assertSame('jblab_wide_events.emitter', (string) $container->getAlias(EventEmitterInterface::class));
+        self::assertFalse($container->getAlias(EventEmitterInterface::class)->isPublic());
         $container->compile();
 
-        self::assertInstanceOf(WideEventContext::class, $container->get(WideEventContext::class));
-        self::assertInstanceOf(WideEventEmitter::class, $container->get(EventEmitterInterface::class));
+        self::assertTrue($container->isCompiled());
         self::assertSame(['name' => 'orders'], $container->getParameter('jblab_wide_events.service_metadata'));
     }
 
