@@ -21,6 +21,11 @@ final class WideEventLimits
     public const STRATEGY_DROP     = 'drop';
     public const STRATEGY_REJECT   = 'reject';
 
+    /**
+     * Create validated bounds for event size, structure, and oversized values.
+     *
+     * Oversized values are truncated, dropped, or rejected according to the selected strategy.
+     */
     public function __construct(
         private readonly int $maxEventBytes = 65_536,
         private readonly int $maxFields = 200,

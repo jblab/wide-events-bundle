@@ -32,14 +32,18 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
+/** Configures the bundle's services and HTTP and Messenger integrations. */
 final class JblabWideEventsBundle extends AbstractBundle
 {
+    /** Define the `jblab_wide_events` semantic configuration tree. */
     public function configure(DefinitionConfigurator $definition): void
     {
         $definition->import('../config/definition.php');
     }
 
     /**
+     * Validate enabled configuration and register explicitly wired bundle services.
+     *
      * @param array<string, mixed> $config
      */
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void

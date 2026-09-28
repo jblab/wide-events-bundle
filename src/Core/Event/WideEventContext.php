@@ -33,6 +33,9 @@ final class WideEventContext
         $this->merge($initial);
     }
 
+    /**
+     * Set a value at a dotted path, replacing incompatible intermediate values with maps.
+     */
     public function set(string $path, mixed $value): void
     {
         $this->assertMutable();
@@ -132,6 +135,8 @@ final class WideEventContext
     }
 
     /**
+     * Return the current application-owned values without finalizing the context.
+     *
      * @return array<string, mixed>
      */
     public function all(): array
@@ -139,6 +144,7 @@ final class WideEventContext
         return $this->values;
     }
 
+    /** Reset all values and allow the context to be enriched again after finalization. */
     public function reset(): void
     {
         $this->finalized = false;

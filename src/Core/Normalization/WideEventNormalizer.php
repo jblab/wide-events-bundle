@@ -29,6 +29,10 @@ final class WideEventNormalizer
     }
 
     /**
+     * Redact and normalize a payload within its configured bounds.
+     *
+     * Truncated and dropped values are recorded in `meta`; reject mode throws when a limit is exceeded.
+     *
      * @param array<string, mixed> $payload
      *
      * @return array<string, mixed>

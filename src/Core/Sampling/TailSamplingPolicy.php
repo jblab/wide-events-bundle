@@ -31,6 +31,9 @@ final class TailSamplingPolicy implements SamplingPolicyInterface
         }
     }
 
+    /**
+     * Retain errors, explicitly retained events, and slow events; deterministically sample all others.
+     */
     public function shouldSample(WideEvent $event): bool
     {
         $payload = $event->toArray();

@@ -48,6 +48,8 @@ final class WideEventCorrelationStamp implements StampInterface
     }
 
     /**
+     * Return only correlation identifiers that are available on this message.
+     *
      * @return array<string, string>
      */
     public function toArray(): array

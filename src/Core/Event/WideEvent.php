@@ -42,6 +42,8 @@ final class WideEvent
     private readonly array $payload;
 
     /**
+     * Finalize a context and produce a redacted, bounded canonical event payload.
+     *
      * @param array<string, mixed> $service
      * @param array<string, mixed> $request
      * @param array<string, mixed> $message

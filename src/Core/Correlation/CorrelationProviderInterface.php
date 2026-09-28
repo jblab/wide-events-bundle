@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace Jblab\WideEvents\Core\Correlation;
 
+/** Supplies optional active trace and span identifiers to event integrations. */
 interface CorrelationProviderInterface
 {
     /**
+     * Return active correlation identifiers or an empty array when none are available.
+     *
      * @return array{trace_id?: string, span_id?: string}
      */
     public function current(): array;

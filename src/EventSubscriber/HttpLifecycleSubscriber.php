@@ -26,6 +26,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Collects main-request lifecycle data and emits one completion event without affecting the response.
+ */
 final class HttpLifecycleSubscriber implements EventSubscriberInterface
 {
     private bool $completed   = false;
@@ -48,6 +51,9 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
     ) {
     }
 
+    /**
+     * Subscribe around the main request lifecycle so failures are recorded before the final response emission.
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -57,6 +63,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /** Initialize the request context and capture request and correlation metadata. */
     public function onRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -92,6 +99,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
         }
     }
 
+    /** Emit the completed request event and optionally propagate its request ID to the response. */
     public function onResponse(ResponseEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -116,6 +124,7 @@ final class HttpLifecycleSubscriber implements EventSubscriberInterface
         );
     }
 
+    /** Capture safe exception identity for inclusion in the eventual response event. */
     public function onException(ExceptionEvent $event): void
     {
         if (!$event->isMainRequest() || $this->completed) {

@@ -60,6 +60,8 @@ final class WideEventRedactor
     }
 
     /**
+     * Recursively redact configured keys and omit unapproved keys in strict allow-list mode.
+     *
      * @param array<array-key, mixed> $payload
      *
      * @return array<array-key, mixed>

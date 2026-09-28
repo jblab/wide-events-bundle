@@ -39,6 +39,9 @@ final class WideEventMiddleware implements MiddlewareInterface
     ) {
     }
 
+    /**
+     * Propagate correlation and emit a completion event without altering message handling on telemetry failure.
+     */
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
         $this->context->reset();
