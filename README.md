@@ -141,6 +141,7 @@ See the detailed [configuration documentation](docs/configuration.md) for redact
 
 ## Documentation
 
+- [Documentation index](docs/index.md)
 - [Event schema and enrichment](docs/events.md)
 - [Privacy, redaction, and limits](docs/privacy-and-limits.md)
 - [HTTP, Messenger, Monolog, and OpenTelemetry integrations](docs/integrations.md)
