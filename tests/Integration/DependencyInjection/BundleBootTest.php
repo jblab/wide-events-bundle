@@ -16,21 +16,16 @@ namespace Jblab\WideEvents\Tests\Integration\DependencyInjection;
 
 use Jblab\WideEvents\JblabWideEventsBundle;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 final class BundleBootTest extends TestCase
 {
-    public function testBundleAndServiceConfigurationCanBuildAContainer(): void
+    public function testBundleCanBuildAContainer(): void
     {
         $container = new ContainerBuilder();
         $bundle    = new JblabWideEventsBundle();
 
         $bundle->build($container);
-
-        $loader    = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../../config'));
-        $loader->load('services.php');
 
         $container->compile();
 

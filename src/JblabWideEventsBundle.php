@@ -56,7 +56,6 @@ final class JblabWideEventsBundle extends AbstractBundle
             throw new \InvalidArgumentException('OpenTelemetry correlation requires the open-telemetry/api package.');
         }
 
-        $configurator->import('../config/services.php');
         $configurator->parameters()->set('jblab_wide_events.service_metadata', $config['service']);
         $services = $configurator->services();
         $services->set('jblab_wide_events.context', WideEventContext::class);
