@@ -10,7 +10,9 @@ jobs:
     name: Release version
     runs-on: ubuntu-latest
     environment: main
-    if: github.event.workflow_run.conclusion == 'success'
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push'
     steps:
       - uses: jblab/.github/.github/actions/release@main
         with:
